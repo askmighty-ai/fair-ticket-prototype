@@ -1,0 +1,11 @@
+{
+  "name": "fair-ticket-prototype",
+  "version": "1.0.0",
+  "description": "Fair ticketing strategic prototype",
+  "scripts": {
+    "start": "serve -s . -l ${PORT:-3000}"
+  },
+  "dependencies": {
+    "serve": "^14.2.3"
+  }
+}

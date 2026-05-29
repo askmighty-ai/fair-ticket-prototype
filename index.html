@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fair Ticket — Strategic Prototype</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FAFAF8;
+    --bg-secondary: #F2F0EC;
+    --bg-success: #EAF3DE;
+    --bg-info: #E6F1FB;
+    --text-primary: #1A1A1A;
+    --text-secondary: #6B7280;
+    --text-tertiary: #9CA3AF;
+    --text-success: #3B6D11;
+    --text-info: #185FA5;
+    --border: rgba(0,0,0,0.12);
+    --border-hover: rgba(0,0,0,0.22);
+    --border-success: #97C459;
+    --border-info: #85B7EB;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1C1C1A;
+      --bg-secondary: #252522;
+      --bg-success: #173404;
+      --bg-info: #042C53;
+      --text-primary: #F0EEE8;
+      --text-secondary: #9C9A94;
+      --text-tertiary: #6B6966;
+      --text-success: #C0DD97;
+      --text-info: #B5D4F4;
+      --border: rgba(255,255,255,0.1);
+      --border-hover: rgba(255,255,255,0.2);
+      --border-success: #3B6D11;
+      --border-info: #185FA5;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+  }
+
+  .logo {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .logo span {
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .prototype-tag {
+    font-size: 11px;
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border);
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* Nav */
+  .nav {
+    display: flex;
+    gap: 6px;
+    padding: 0 0 1.5rem;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    font-size: 13px;
+    padding: 7px 16px;
+    border: 0.5px solid var(--border-hover);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+
+  .nav-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+
+  .nav-btn.active {
+    background: var(--text-primary);
+    color: var(--bg);
+    border-color: var(--text-primary);
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── Contrast screen ── */
+  .contrast-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .contrast-col {
+    background: var(--bg);
+    padding: 1.75rem;
+  }
+
+  .contrast-col.dark {
+    background: #111110;
+  }
+
+  .contrast-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    color: #555;
+  }
+
+  .contrast-col.dark .contrast-label { color: rgba(255,255,255,.35); }
+
+  .contrast-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+
+  .contrast-col.dark .contrast-title { color: #F0EEE8; }
+
+  .contrast-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 1.25rem;
+  }
+
+  .contrast-col.dark .contrast-sub { color: rgba(255,255,255,.3); }
+
+  .contrast-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 11px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .contrast-col.dark .contrast-item { color: rgba(255,255,255,.5); }
+
+  .ci-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 10px;
+  }
+
+  .ci-bad { background: #F7C1C1; color: #A32D2D; }
+  .ci-good { background: #C0DD97; color: #3B6D11; }
+
+  .feeling {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .contrast-col.dark .feeling {
+    border-color: rgba(255,255,255,.1);
+    color: rgba(255,255,255,.9);
+  }
+
+  .cta-row {
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .next-btn {
+    font-size: 14px;
+    padding: 10px 22px;
+    border: 0.5px solid var(--border-hover);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
+  }
+
+  .next-btn:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+
+  /* ── Checkout screen ── */
+  .event-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .event-art {
+    width: 62px;
+    height: 62px;
+    border-radius: var(--radius-md);
+    background: #111110;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .event-art i { font-size: 26px; color: rgba(255,255,255,.6); }
+
+  .event-info h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+
+  .event-info p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .trust-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .trust-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    padding: 5px 11px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border);
+  }
+
+  .trust-pill i { font-size: 13px; color: #639922; }
+
+  .ticket-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .ticket-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+
+  .ticket-row + .ticket-row { border-top: 0.5px solid var(--border); }
+
+  .ticket-row .label { color: var(--text-secondary); }
+
+  .fee-row .label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .fee-tag {
+    font-size: 10px;
+    background: var(--bg-secondary);
+    padding: 2px 7px;
+    border-radius: 10px;
+    color: var(--text-tertiary);
+  }
+
+  .total-row {
+    border-top: 1px solid var(--border) !important;
+    margin-top: 4px;
+    padding-top: 12px !important;
+  }
+
+  .total-row .label {
+    font-weight: 500;
+    color: var(--text-primary) !important;
+    font-size: 14px;
+  }
+
+  .total-row .amount {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .cta-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--text-primary);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .15s;
+  }
+
+  .cta-btn:hover { opacity: .85; }
+
+  .fee-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  /* ── Queue screen ── */
+  .queue-hero {
+    text-align: center;
+    padding: 2.25rem 1rem 1.75rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    margin-bottom: 1.25rem;
+    border: 0.5px solid var(--border);
+  }
+
+  .queue-position {
+    font-size: 64px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .queue-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+  }
+
+  .queue-label strong { color: var(--text-primary); }
+
+  .queue-sublabel {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+
+  .queue-bar-wrap {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .qb-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+
+  .qb-track {
+    height: 6px;
+    background: var(--bg-secondary);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .qb-fill {
+    height: 100%;
+    background: #639922;
+    border-radius: 3px;
+    width: 34%;
+  }
+
+  .queue-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .qs-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    padding: 14px;
+    text-align: center;
+  }
+
+  .qs-num {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .qs-lbl {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 3px;
+  }
+
+  .anti-bot {
+    background: var(--bg);
+    border: 0.5px solid var(--border-success);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .ab-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .ab-header i { font-size: 16px; color: var(--text-success); }
+  .ab-header span { font-size: 13px; font-weight: 500; color: var(--text-success); }
+
+  .ab-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    line-height: 1.5;
+  }
+
+  .ab-item i { font-size: 14px; color: var(--text-success); flex-shrink: 0; }
+
+  .info-strip {
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 11px 14px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ── Resale screen ── */
+  .resale-header {
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .rh-left h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+
+  .rh-left p { font-size: 13px; color: var(--text-secondary); }
+
+  .verified-badge {
+    background: #C0DD97;
+    color: #3B6D11;
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .cap-notice {
+    background: var(--bg-info);
+    border: 0.5px solid var(--border-info);
+    border-radius: var(--radius-md);
+    padding: 11px 14px;
+    font-size: 13px;
+    color: var(--text-info);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .cap-notice i { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .resale-listing {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 10px;
+  }
+
+  .rl-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .rl-seller { font-size: 13px; color: var(--text-secondary); }
+  .rl-seller strong { color: var(--text-primary); font-weight: 500; display: block; font-size: 15px; margin-bottom: 2px; }
+
+  .rl-price-wrap { text-align: right; }
+  .rl-price { font-size: 20px; font-weight: 500; color: var(--text-primary); }
+  .rl-orig { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+
+  .rl-markup {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 4px;
+  }
+
+  .markup-ok { background: #EAF3DE; color: #3B6D11; }
+  .markup-warn { background: #FAEEDA; color: #854F0B; }
+
+  .rl-bottom { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+
+  .rl-tag {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .rl-tag i { font-size: 12px; }
+
+  .buy-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--text-primary);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .15s;
+  }
+
+  .buy-btn:hover { opacity: .85; }
+
+  .resale-footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 6px;
+  }
+
+  /* ── Controls screen ── */
+  .controls-meta {
+    margin-bottom: 1.5rem;
+  }
+
+  .controls-meta .sublabel {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  .controls-meta h2 {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 500px) {
+    .controls-grid { grid-template-columns: 1fr; }
+    .contrast-grid { grid-template-columns: 1fr; }
+  }
+
+  .ctrl-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+
+  .ctrl-card h4 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ctrl-card h4 i { font-size: 15px; color: var(--text-secondary); }
+
+  .ctrl-card .card-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--text-primary);
+    gap: 12px;
+  }
+
+  .toggle {
+    width: 38px;
+    height: 22px;
+    border-radius: 11px;
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border-hover);
+    position: relative;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+    flex-shrink: 0;
+  }
+
+  .toggle.on { background: #639922; border-color: #639922; }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: left .15s;
+    box-shadow: 0 0 0 0.5px rgba(0,0,0,.12);
+  }
+
+  .toggle.on::after { left: 20px; }
+
+  .slider-row { margin-bottom: 12px; }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+
+  .slider-label strong { color: var(--text-primary); font-weight: 500; }
+
+  input[type=range] { width: 100%; cursor: pointer; }
+
+  .ctrl-full { grid-column: 1 / -1; }
+
+  .priority-list { display: flex; flex-direction: column; gap: 7px; }
+
+  .pl-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    color: var(--text-primary);
+    border: 0.5px solid var(--border);
+  }
+
+  .pl-rank {
+    width: 22px;
+    height: 22px;
+    background: var(--bg);
+    border: 0.5px solid var(--border-hover);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+  }
+
+  .pl-label { flex: 1; }
+
+  .pl-active {
+    font-size: 11px;
+    color: var(--text-success);
+    background: var(--bg-success);
+    padding: 3px 9px;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .pl-public {
+    font-size: 11px;
+    color: var(--text-tertiary);
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header class="site-header">
+    <div class="logo">fair<span>ticket</span></div>
+    <div class="prototype-tag">Strategic prototype</div>
+  </header>
+
+  <nav class="nav" role="navigation" aria-label="Prototype screens">
+    <button class="nav-btn active" onclick="show('contrast')">Today vs. tomorrow</button>
+    <button class="nav-btn" onclick="show('checkout')">Fair checkout</button>
+    <button class="nav-btn" onclick="show('queue')">Fan queue</button>
+    <button class="nav-btn" onclick="show('resale')">Transparent resale</button>
+    <button class="nav-btn" onclick="show('controls')">Artist controls</button>
+  </nav>
+
+  <!-- SCREEN 1: Contrast -->
+  <div id="contrast" class="screen active">
+    <div class="contrast-grid">
+      <div class="contrast-col dark">
+        <div class="contrast-label">Today</div>
+        <div class="contrast-title">The usual experience</div>
+        <div class="contrast-sub">What fans know</div>
+        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Hidden fees revealed at payment</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Panic queues with no information</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Dynamic price jumps mid-checkout</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Bots buying out in seconds</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Resale at 4–10× face value</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Confusing transfers, lost tickets</div></div>
+        <div class="feeling">😤&nbsp; "Why does this always happen?"</div>
+      </div>
+      <div class="contrast-col">
+        <div class="contrast-label">What this could be</div>
+        <div class="contrast-title">A different philosophy</div>
+        <div class="contrast-sub">Built around the fan</div>
+        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>All-in pricing from the first screen</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Calm queue with live position</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Price locked when you enter queue</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Verified-fan gates, no bots</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Resale capped, seller verified</div></div>
+        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>One-tap transfer with ownership trail</div></div>
+        <div class="feeling">😮‍💨&nbsp; "Finally."</div>
+      </div>
+    </div>
+    <div class="cta-row">
+      <button class="next-btn" onclick="show('checkout')">See the checkout experience &nbsp;<i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Checkout -->
+  <div id="checkout" class="screen">
+    <div class="event-header">
+      <div class="event-art"><i class="ti ti-music" aria-hidden="true"></i></div>
+      <div class="event-info">
+        <h2>Phoebe Bridgers</h2>
+        <p>The Wiltern · Los Angeles · Sat Jun 14 · 8:00 PM</p>
+        <p style="margin-top:3px;font-size:12px;color:var(--text-tertiary)">General admission floor · 1 ticket</p>
+      </div>
+    </div>
+
+    <div class="trust-bar">
+      <div class="trust-pill"><i class="ti ti-lock" aria-hidden="true"></i> Price locked</div>
+      <div class="trust-pill"><i class="ti ti-shield-check" aria-hidden="true"></i> Verified venue</div>
+      <div class="trust-pill"><i class="ti ti-receipt" aria-hidden="true"></i> No surprises</div>
+    </div>
+
+    <div class="ticket-card">
+      <div class="ticket-row">
+        <span class="label">Ticket price</span>
+        <span>$35.00</span>
+      </div>
+      <div class="ticket-row fee-row">
+        <span class="label"><i class="ti ti-building" style="font-size:13px" aria-hidden="true"></i>&nbsp;Venue operations <span class="fee-tag">venue</span></span>
+        <span style="font-size:13px">$2.00</span>
+      </div>
+      <div class="ticket-row fee-row">
+        <span class="label"><i class="ti ti-credit-card" style="font-size:13px" aria-hidden="true"></i>&nbsp;Payment processing <span class="fee-tag">processor</span></span>
+        <span style="font-size:13px">$1.25</span>
+      </div>
+      <div class="ticket-row fee-row">
+        <span class="label"><i class="ti ti-ticket" style="font-size:13px" aria-hidden="true"></i>&nbsp;Platform fee <span class="fee-tag">us</span></span>
+        <span style="font-size:13px">$1.50</span>
+      </div>
+      <div class="ticket-row fee-row">
+        <span class="label"><i class="ti ti-headset" style="font-size:13px" aria-hidden="true"></i>&nbsp;Support &amp; fraud protection <span class="fee-tag">us</span></span>
+        <span style="font-size:13px">$1.00</span>
+      </div>
+      <div class="ticket-row total-row">
+        <span class="label">Total</span>
+        <span class="amount">$40.75</span>
+      </div>
+    </div>
+
+    <button class="cta-btn">Confirm purchase</button>
+    <p class="fee-note">Every dollar above face value is itemized, attributed, and capped.<br>No service fees hidden in a drawer. Ever.</p>
+  </div>
+
+  <!-- SCREEN 3: Queue -->
+  <div id="queue" class="screen">
+    <div class="queue-hero">
+      <div class="queue-position">4,847</div>
+      <div class="queue-label">Your position in line · estimated wait <strong>~22 min</strong></div>
+      <div class="queue-sublabel">Your price is locked. Waiting won't cost you more.</div>
+    </div>
+
+    <div class="queue-bar-wrap">
+      <div class="qb-label"><span>Queue progress</span><span>~34% through</span></div>
+      <div class="qb-track"><div class="qb-fill"></div></div>
+    </div>
+
+    <div class="queue-stats">
+      <div class="qs-card">
+        <div class="qs-num">14,204</div>
+        <div class="qs-lbl">Verified fans</div>
+      </div>
+      <div class="qs-card">
+        <div class="qs-num">2,800</div>
+        <div class="qs-lbl">Tickets available</div>
+      </div>
+      <div class="qs-card">
+        <div class="qs-num" style="color:#639922">0</div>
+        <div class="qs-lbl">Bots detected</div>
+      </div>
+    </div>
+
+    <div class="anti-bot">
+      <div class="ab-header">
+        <i class="ti ti-shield-check" aria-hidden="true"></i>
+        <span>You are not competing against bots</span>
+      </div>
+      <div class="ab-item"><i class="ti ti-check" aria-hidden="true"></i> Queue entry required phone-verified account</div>
+      <div class="ab-item"><i class="ti ti-check" aria-hidden="true"></i> Purchase limits enforced per verified identity</div>
+      <div class="ab-item"><i class="ti ti-check" aria-hidden="true"></i> Automated detection running continuously</div>
+      <div class="ab-item"><i class="ti ti-check" aria-hidden="true"></i> Ejected positions return to back of queue, not resale</div>
+    </div>
+
+    <div class="info-strip">
+      <i class="ti ti-bell" style="font-size:14px;vertical-align:-2px" aria-hidden="true"></i>&nbsp;
+      We'll send you a push notification 5 minutes before your turn. You don't need to watch this screen.
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Resale -->
+  <div id="resale" class="screen">
+    <div class="resale-header">
+      <div class="rh-left">
+        <h3>Phoebe Bridgers · Jun 14</h3>
+        <p>3 verified resale tickets available</p>
+      </div>
+      <div class="verified-badge"><i class="ti ti-shield-check" aria-hidden="true"></i> Verified resale</div>
+    </div>
+
+    <div class="cap-notice">
+      <i class="ti ti-info-circle" aria-hidden="true"></i>
+      Resale is capped at 120% of face value by the artist. Tickets above this limit are blocked automatically.
+    </div>
+
+    <div class="resale-listing">
+      <div class="rl-top">
+        <div class="rl-seller">
+          <strong>@maya_la</strong>
+          Original buyer · Verified since 2021
+        </div>
+        <div class="rl-price-wrap">
+          <div class="rl-price">$40.75</div>
+          <div class="rl-orig">Face value: $40.75</div>
+          <div class="rl-markup markup-ok">No markup · at cost</div>
+        </div>
+      </div>
+      <div class="rl-bottom">
+        <div class="rl-tag"><i class="ti ti-shield-check" aria-hidden="true"></i> Original purchaser</div>
+        <div class="rl-tag"><i class="ti ti-transfer" aria-hidden="true"></i> Instant transfer</div>
+        <div class="rl-tag"><i class="ti ti-clock" aria-hidden="true"></i> 2h ago</div>
+      </div>
+      <button class="buy-btn">Buy this ticket</button>
+    </div>
+
+    <div class="resale-listing">
+      <div class="rl-top">
+        <div class="rl-seller">
+          <strong>@jonrocks99</strong>
+          Original buyer · Verified since 2023
+        </div>
+        <div class="rl-price-wrap">
+          <div class="rl-price">$47.00</div>
+          <div class="rl-orig">Face value: $40.75</div>
+          <div class="rl-markup markup-warn">+15% · within cap</div>
+        </div>
+      </div>
+      <div class="rl-bottom">
+        <div class="rl-tag"><i class="ti ti-shield-check" aria-hidden="true"></i> Original purchaser</div>
+        <div class="rl-tag"><i class="ti ti-transfer" aria-hidden="true"></i> Instant transfer</div>
+        <div class="rl-tag"><i class="ti ti-clock" aria-hidden="true"></i> 5h ago</div>
+      </div>
+      <button class="buy-btn">Buy this ticket</button>
+    </div>
+
+    <p class="resale-footer">All resale revenue goes directly to the seller. We take no cut of resale.</p>
+  </div>
+
+  <!-- SCREEN 5: Artist Controls -->
+  <div id="controls" class="screen">
+    <div class="controls-meta">
+      <div class="sublabel">Managing</div>
+      <h2>Phoebe Bridgers · The Wiltern · Jun 14</h2>
+    </div>
+
+    <div class="controls-grid">
+
+      <div class="ctrl-card">
+        <h4><i class="ti ti-arrows-exchange" aria-hidden="true"></i> Resale rules</h4>
+        <p class="card-desc">Control how your tickets can be resold</p>
+        <div class="toggle-row">
+          <span>Allow resale</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+        <div class="slider-row">
+          <div class="slider-label"><span>Max markup</span><strong id="cap-val">20%</strong></div>
+          <input type="range" min="0" max="100" value="20" step="5" oninput="document.getElementById('cap-val').textContent=this.value+'%'">
+        </div>
+        <div class="toggle-row">
+          <span>Block commercial resellers</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+      </div>
+
+      <div class="ctrl-card">
+        <h4><i class="ti ti-receipt" aria-hidden="true"></i> Fee transparency</h4>
+        <p class="card-desc">What fans see at checkout</p>
+        <div class="toggle-row">
+          <span>Show fee breakdown</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+        <div class="toggle-row">
+          <span>All-in pricing in listings</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+        <div class="toggle-row">
+          <span>Lock price at queue entry</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+      </div>
+
+      <div class="ctrl-card ctrl-full">
+        <h4><i class="ti ti-award" aria-hidden="true"></i> Fan access priority</h4>
+        <p class="card-desc">Who gets first access to tickets</p>
+        <div class="priority-list">
+          <div class="pl-item">
+            <div class="pl-rank">1</div>
+            <div class="pl-label">Official fan club members</div>
+            <div class="pl-active">48h early access</div>
+          </div>
+          <div class="pl-item">
+            <div class="pl-rank">2</div>
+            <div class="pl-label">Verified previous show attendees</div>
+            <div class="pl-active">24h early access</div>
+          </div>
+          <div class="pl-item">
+            <div class="pl-rank">3</div>
+            <div class="pl-label">Email list subscribers</div>
+            <div class="pl-active">12h early access</div>
+          </div>
+          <div class="pl-item">
+            <div class="pl-rank">4</div>
+            <div class="pl-label">General public</div>
+            <div class="pl-public">Standard on-sale</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="info-strip">
+      <i class="ti ti-chart-bar" style="font-size:14px;vertical-align:-2px" aria-hidden="true"></i>&nbsp;
+      Every rule change takes effect instantly. You'll see real-time fan sentiment and purchase patterns in your analytics dashboard.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const order = ['contrast','checkout','queue','resale','controls'];
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-btn')[order.indexOf(id)].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.toggle').forEach(t => {
+    t.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        t.classList.toggle('on');
+        t.setAttribute('aria-checked', t.classList.contains('on'));
+      }
+    });
+  });
+</script>
+</body>
+</html>
