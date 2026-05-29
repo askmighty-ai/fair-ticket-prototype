@@ -53,7 +53,7 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     background: var(--bg);
     color: var(--text-primary);
-    padding: 1.25rem 2rem 1.25rem;
+    padding: 1.5rem 2rem;
     overflow: hidden;
   }
 
@@ -74,7 +74,7 @@
   }
 
   .logo {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 500;
     color: var(--text-primary);
     letter-spacing: -0.02em;
@@ -84,7 +84,7 @@
 
   .nav {
     display: flex;
-    gap: 5px;
+    gap: 6px;
     padding: 0 0 1rem;
     border-bottom: 0.5px solid var(--border);
     margin-bottom: 1.25rem;
@@ -93,8 +93,8 @@
   }
 
   .nav-btn {
-    font-size: 12px;
-    padding: 6px 14px;
+    font-size: 13px;
+    padding: 7px 16px;
     border: 0.5px solid var(--border-hover);
     border-radius: 20px;
     background: transparent;
@@ -107,8 +107,8 @@
   .nav-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
   .nav-btn.active { background: var(--text-primary); color: var(--bg); border-color: var(--text-primary); }
 
-  .screen { display: none; flex: 1; }
-  .screen.active { display: block; }
+  .screen { display: none; }
+  .screen.active { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 
   /* ── Contrast ── */
   .contrast-grid {
@@ -119,34 +119,41 @@
     border-radius: var(--radius-xl);
     overflow: hidden;
     margin-bottom: 1rem;
+    flex: 1;
+    min-height: 0;
   }
 
-  .contrast-col { background: var(--bg); padding: 1.25rem; }
+  .contrast-col {
+    background: var(--bg); padding: 1.5rem;
+    display: flex; flex-direction: column;
+  }
   .contrast-col.dark { background: #111110; }
 
   .contrast-label {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
     letter-spacing: .08em;
     text-transform: uppercase;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.75rem;
     color: #555;
   }
 
   .contrast-col.dark .contrast-label { color: rgba(255,255,255,.35); }
 
-  .contrast-title { font-size: 15px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+  .contrast-title { font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
   .contrast-col.dark .contrast-title { color: #F0EEE8; }
 
-  .contrast-sub { font-size: 12px; color: var(--text-tertiary); margin-bottom: 0.9rem; }
+  .contrast-sub { font-size: 12px; color: var(--text-tertiary); margin-bottom: 1rem; }
   .contrast-col.dark .contrast-sub { color: rgba(255,255,255,.3); }
+
+  .contrast-items { flex: 1; }
 
   .contrast-item {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 7px;
-    font-size: 12px;
+    gap: 9px;
+    margin-bottom: 10px;
+    font-size: 13px;
     color: var(--text-secondary);
     line-height: 1.4;
   }
@@ -154,23 +161,23 @@
   .contrast-col.dark .contrast-item { color: rgba(255,255,255,.5); }
 
   .ci-icon {
-    width: 16px; height: 16px; border-radius: 50%;
+    width: 17px; height: 17px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; margin-top: 1px; font-size: 9px;
+    flex-shrink: 0; margin-top: 1px; font-size: 10px;
   }
 
   .ci-bad { background: #F7C1C1; color: #A32D2D; }
   .ci-good { background: #C0DD97; color: #3B6D11; }
 
   .feeling {
-    font-size: 16px; font-weight: 500; color: var(--text-primary);
-    margin-top: 0.9rem; padding-top: 0.9rem;
+    font-size: 17px; font-weight: 500; color: var(--text-primary);
+    margin-top: 1rem; padding-top: 1rem;
     border-top: 0.5px solid var(--border);
   }
 
   .contrast-col.dark .feeling { border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.9); }
 
-  .cta-row { text-align: center; }
+  .cta-row { text-align: center; flex-shrink: 0; }
 
   .next-btn {
     font-size: 13px; padding: 8px 20px;
@@ -182,6 +189,7 @@
   .next-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
 
   /* ── Checkout ── */
+  .ticket-spacer { flex: 1; }
   .event-header { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; }
 
   .event-art {
@@ -471,24 +479,28 @@
         <div class="contrast-label">Today</div>
         <div class="contrast-title">The usual experience</div>
         <div class="contrast-sub">What fans know</div>
-        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Hidden fees revealed at payment</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Panic queues with no information</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Dynamic price jumps mid-checkout</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Bots buying out in seconds</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Resale at 4–10× face value</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Confusing transfers, lost tickets</div></div>
+        <div class="contrast-items">
+          <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Hidden fees revealed at payment</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Panic queues with no information</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Dynamic price jumps mid-checkout</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Bots buying out in seconds</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Resale at 4–10× face value</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-bad"><i class="ti ti-x" aria-hidden="true"></i></div><div>Confusing transfers, lost tickets</div></div>
+        </div>
         <div class="feeling">😤&nbsp; "Why does this always happen?"</div>
       </div>
       <div class="contrast-col">
         <div class="contrast-label">What this could be</div>
         <div class="contrast-title">A different philosophy</div>
         <div class="contrast-sub">Built around the fan</div>
-        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>All-in pricing from the first screen</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Calm queue with live position</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Price locked when you enter queue</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Verified-fan gates, no bots</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Resale capped, seller verified</div></div>
-        <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>One-tap transfer with ownership trail</div></div>
+        <div class="contrast-items">
+          <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>All-in pricing from the first screen</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Calm queue with live position</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Price locked when you enter queue</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Verified-fan gates, no bots</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>Resale capped, seller verified</div></div>
+          <div class="contrast-item"><div class="ci-icon ci-good"><i class="ti ti-check" aria-hidden="true"></i></div><div>One-tap transfer with ownership trail</div></div>
+        </div>
         <div class="feeling">😮‍💨&nbsp; "Finally."</div>
       </div>
     </div>
@@ -538,6 +550,7 @@
         <span class="amount">$40.75</span>
       </div>
     </div>
+    <div class="ticket-spacer"></div>
     <button class="cta-btn">Confirm purchase</button>
     <p class="fee-note">No hidden service fees.</p>
   </div>
@@ -565,6 +578,7 @@
       <div class="ab-item"><i class="ti ti-check" aria-hidden="true"></i> Automated detection running continuously</div>
       <div class="ab-item"><i class="ti ti-check" aria-hidden="true"></i> Ejected positions return to back of queue, not resale</div>
     </div>
+    <div class="ticket-spacer"></div>
     <div class="info-strip">
       <i class="ti ti-bell" style="font-size:13px;vertical-align:-2px" aria-hidden="true"></i>&nbsp;
       We'll send you a push notification 5 minutes before your turn. You don't need to watch this screen.
@@ -616,6 +630,7 @@
       </div>
       <button class="buy-btn">Buy this ticket</button>
     </div>
+    <div class="ticket-spacer"></div>
     <p class="resale-footer">All resale revenue goes directly to the seller. We take no cut of resale.</p>
   </div>
 
@@ -654,6 +669,7 @@
         </div>
       </div>
     </div>
+    <div class="ticket-spacer"></div>
     <div class="info-strip">
       <i class="ti ti-chart-bar" style="font-size:13px;vertical-align:-2px" aria-hidden="true"></i>&nbsp;
       Every rule change takes effect instantly. You'll see real-time fan sentiment and purchase patterns in your analytics dashboard.
